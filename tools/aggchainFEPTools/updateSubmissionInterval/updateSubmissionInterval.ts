@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import path = require('path');
 import fs = require('fs');
 
@@ -39,7 +40,12 @@ async function main() {
             process.exit(1);
     }
 
-    checkParams(params, mandatoryParameters);
+    try {
+        checkParams(params, mandatoryParameters);
+    } catch (e: any) {
+        logger.error(`Error checking parameters. ${e.message}`);
+        process.exit(1);
+    }
 
     const { type, rollupAddress, submissionInterval } = params;
 
@@ -117,7 +123,7 @@ async function main() {
             outputJson.rollupAddress = rollupAddress;
             outputJson.submissionInterval = submissionInterval;
             outputJson.txHash = tx.hash;
-        } catch (e) {
+        } catch (e: any) {
             logger.error(`Error sending tx: ${e.message}`);
             process.exit(1);
         }
